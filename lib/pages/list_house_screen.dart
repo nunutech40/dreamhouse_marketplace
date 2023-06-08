@@ -10,6 +10,9 @@ class ListHouseScreen extends StatefulWidget {
 }
 
 class _ListHouseScreenState extends State<ListHouseScreen> {
+  String _search = '';
+  List<House> tempHouse = houseList;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,6 +29,14 @@ class _ListHouseScreenState extends State<ListHouseScreen> {
           ),
           const SizedBox(height: 24.0),
           TextField(
+            onChanged: (String value) {
+              setState(() {
+                tempHouse = houseList
+                    .where((house) =>
+                        house.title.toLowerCase().contains(value.toLowerCase()))
+                    .toList();
+              });
+            },
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.only(top: 8.0),
               hintText: "Cari rumah impian anda",
@@ -49,9 +60,9 @@ class _ListHouseScreenState extends State<ListHouseScreen> {
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: houseList.length,
+            itemCount: tempHouse.length,
             itemBuilder: (context, index) {
-              final House house = houseList[index];
+              final House house = tempHouse[index];
               return InkWell(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
